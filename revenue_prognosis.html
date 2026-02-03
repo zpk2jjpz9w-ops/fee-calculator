@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Path to $1M Revenue | Fund Prognosis Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .goal-banner {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-radius: 16px;
+            padding: 20px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .goal-banner h2 {
+            color: #1f2937;
+            font-size: 1.5rem;
+        }
+
+        .goal-amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1000px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            padding: 24px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: var(--gray-50);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .slider-group {
+            margin-bottom: 20px;
+        }
+
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        .slider-value {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .slider-group input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--gray-200);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .results-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .key-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .metric-card {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--gray-200);
+            text-align: center;
+        }
+
+        .metric-card.highlight {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-color: var(--success);
+        }
+
+        .metric-card.warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-color: var(--warning);
+        }
+
+        .metric-card.primary {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-color: var(--primary);
+        }
+
+        .metric-card.danger {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-color: var(--danger);
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .metric-value.success { color: var(--success); }
+        .metric-value.warning { color: #b45309; }
+        .metric-value.primary { color: var(--primary); }
+        .metric-value.danger { color: var(--danger); }
+
+        .metric-sub {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .projection-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .projection-table th {
+            background: var(--gray-800);
+            color: white;
+            padding: 12px 14px;
+            text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .projection-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 0.9rem;
+        }
+
+        .projection-table tr:nth-child(even) {
+            background: var(--gray-50);
+        }
+
+        .projection-table tr.goal-reached {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            font-weight: 600;
+        }
+
+        .projection-table tr.goal-reached td {
+            border-color: var(--success);
+        }
+
+        .money {
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+        }
+
+        .progress-bar-container {
+            background: var(--gray-200);
+            border-radius: 10px;
+            height: 24px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .assumptions-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 16px;
+        }
+
+        .assumptions-box h4 {
+            font-size: 0.9rem;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+        }
+
+        .assumptions-box ul {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            padding-left: 20px;
+        }
+
+        .assumptions-box li {
+            margin-bottom: 4px;
+        }
+
+        .sensitivity-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 2px;
+            margin-top: 16px;
+            font-size: 0.75rem;
+        }
+
+        .sensitivity-header {
+            background: var(--gray-700);
+            color: white;
+            padding: 8px 4px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .sensitivity-cell {
+            padding: 8px 4px;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .sensitivity-row-header {
+            background: var(--gray-200);
+            font-weight: 600;
+        }
+
+        .heat-1 { background: #fee2e2; }
+        .heat-2 { background: #fef3c7; }
+        .heat-3 { background: #fef9c3; }
+        .heat-4 { background: #ecfccb; }
+        .heat-5 { background: #d1fae5; }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: var(--gray-100);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background: var(--gray-200);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            margin-top: 30px;
+            font-size: 0.85rem;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 16px;
+            border: 1px solid #f59e0b;
+        }
+
+        .insight-box h4 {
+            color: #92400e;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .insight-box p {
+            color: #78350f;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎯 Path to $1M Revenue</h1>
+            <p>Interactive Fund Growth Prognosis Tool</p>
+        </header>
+
+        <div class="goal-banner">
+            <div>
+                <h2>Revenue Goal</h2>
+                <p style="color: #78350f;">Annual fund income target</p>
+            </div>
+            <div class="goal-amount">$1,000,000</div>
+        </div>
+
+        <div class="main-grid">
+            <!-- Left Panel: Controls -->
+            <div class="card">
+                <h3 class="section-title">📊 Variables</h3>
+
+                <div class="slider-group">
+                    <label>
+                        <span>Number of Clients</span>
+                        <span class="slider-value" id="clientsValue">50</span>
+                    </label>
+                    <input type="range" id="numClients" min="10" max="200" value="50" oninput="updateSlider('clients')">
+                </div>
+
+                <div class="slider-group">
+                    <label>
+                        <span>Average AUM per Client ($K)</span>
+                        <span class="slider-value" id="avgAumValue">$400K</span>
+                    </label>
+                    <input type="range" id="avgAum" min="100" max="1000" step="50" value="400" oninput="updateSlider('avgAum')">
+                </div>
+
+                <div class="slider-group">
+                    <label>
+                        <span>New Clients per Year</span>
+                        <span class="slider-value" id="growthValue">15</span>
+                    </label>
+                    <input type="range" id="clientGrowth" min="0" max="50" value="15" oninput="updateSlider('growth')">
+                </div>
+
+                <div class="slider-group">
+                    <label>
+                        <span>Client Churn Rate (%/year)</span>
+                        <span class="slider-value" id="churnValue">5%</span>
+                    </label>
+                    <input type="range" id="churnRate" min="0" max="20" value="5" oninput="updateSlider('churn')">
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="form-group">
+                    <label>Risk Profile (Expected Return)</label>
+                    <select id="riskProfile" onchange="calculate()">
+                        <option value="conservative">Conservative (10% avg)</option>
+                        <option value="moderate" selected>Moderate (20% avg)</option>
+                        <option value="aggressive">Aggressive (30% avg)</option>
+                        <option value="custom">Custom Return</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="customReturnGroup" style="display: none;">
+                    <label>Custom Expected Return (%)</label>
+                    <input type="number" id="customReturn" value="15" min="0" max="50" onchange="calculate()">
+                </div>
+
+                <div class="form-group">
+                    <label>Service Model Mix</label>
+                    <select id="modelMix" onchange="calculate()">
+                        <option value="100-0">100% Advisory (1% mgmt)</option>
+                        <option value="70-30" selected>70% Advisory / 30% Managed</option>
+                        <option value="50-50">50% Advisory / 50% Managed</option>
+                        <option value="30-70">30% Advisory / 70% Managed</option>
+                        <option value="0-100">100% Managed (2% mgmt)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Fee Calculation Method</label>
+                    <select id="feeMethod" onchange="calculate()">
+                        <option value="cumulative" selected>Cumulative</option>
+                        <option value="non-cumulative">Non-Cumulative</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="calculate()">
+                    🔄 Recalculate Projections
+                </button>
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div class="results-panel">
+                <!-- Key Metrics -->
+                <div class="card">
+                    <h3 class="section-title">🎯 Key Metrics</h3>
+                    <div class="key-metrics">
+                        <div class="metric-card warning">
+                            <div class="metric-label">Years to Goal</div>
+                            <div class="metric-value warning" id="yearsToGoal">—</div>
+                            <div class="metric-sub">at current trajectory</div>
+                        </div>
+                        <div class="metric-card primary">
+                            <div class="metric-label">Current Total AUM</div>
+                            <div class="metric-value primary money" id="currentAum">—</div>
+                            <div class="metric-sub" id="currentClients">— clients</div>
+                        </div>
+                        <div class="metric-card highlight">
+                            <div class="metric-label">Year 1 Revenue</div>
+                            <div class="metric-value success money" id="year1Revenue">—</div>
+                            <div class="metric-sub" id="year1Pct">— of goal</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Required AUM for $1M</div>
+                            <div class="metric-value money" id="requiredAum">—</div>
+                            <div class="metric-sub" id="requiredClients">— clients needed</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progressBar" style="width: 0%">0%</div>
+                    </div>
+                    <p style="text-align: center; font-size: 0.85rem; color: var(--gray-500);">Year 1 Progress Toward $1M Goal</p>
+                </div>
+
+                <!-- Tabs for different views -->
+                <div class="card">
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="showTab('projection')">📈 5-Year Projection</button>
+                        <button class="tab-btn" onclick="showTab('sensitivity')">📊 Sensitivity</button>
+                    </div>
+
+                    <!-- Projection Tab -->
+                    <div id="projection" class="tab-content active">
+                        <table class="projection-table">
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Clients</th>
+                                    <th>Total AUM</th>
+                                    <th>Mgmt Fees</th>
+                                    <th>Perf Fees</th>
+                                    <th>Total Revenue</th>
+                                    <th>Per Partner</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projectionBody"></tbody>
+                        </table>
+
+                        <div class="insight-box" id="insightBox">
+                            <h4>💡 Key Insight</h4>
+                            <p id="insightText">Adjust the variables to see projections.</p>
+                        </div>
+                    </div>
+
+                    <!-- Sensitivity Tab -->
+                    <div id="sensitivity" class="tab-content">
+                        <div class="assumptions-box" style="margin-bottom: 16px; margin-top: 0;">
+                            <h4 style="margin-bottom: 6px;">💡 How to use</h4>
+                            <p style="margin: 0; font-size: 0.85rem;">Adjust the <strong>Average AUM per Client</strong> slider on the left to see how the matrix changes. The grid shows years to reach $1M goal for different client counts and return rates.</p>
+                        </div>
+                        <p style="color: var(--gray-600); margin-bottom: 8px;">Years to $1M based on # of Clients vs Expected Return:</p>
+                        <p style="color: var(--primary); font-weight: 600; margin-bottom: 16px; font-size: 0.9rem;" id="sensitivityAumLabel">Based on $400K avg AUM per client</p>
+                        <div class="sensitivity-grid" id="sensitivityGrid"></div>
+
+                        <div class="divider"></div>
+                        <p style="color: var(--gray-600); margin-bottom: 16px;">Revenue by Total AUM vs Return (single year):</p>
+                        <div class="sensitivity-grid" id="revenueGrid"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            Fund Revenue Prognosis Tool
+        </footer>
+    </div>
+
+    <script>
+        // Constants - Fee Structure
+        const HURDLES = [0.05, 0.07, 0.10, 0.15];
+        const RATES = [0.01, 0.03, 0.10, 0.20];
+        const ADVISORY_MGMT = 0.01;
+        const MANAGED_MGMT = 0.02;
+        const GOAL = 1000000;
+
+        // Risk profile expected returns
+        const RISK_RETURNS = {
+            conservative: 0.10,
+            moderate: 0.20,
+            aggressive: 0.30
+        };
+
+        // Utility functions
+        function formatMoney(value) {
+            if (value >= 1000000) {
+                return '$' + (value / 1000000).toFixed(2) + 'M';
+            }
+            return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+
+        function formatMoneyFull(value) {
+            return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+
+        function formatPercent(value) {
+            return (value * 100).toFixed(2) + '%';
+        }
+
+        // Calculate performance fee (cumulative method)
+        function calcPerfFeeCumulative(returnPct, aum) {
+            if (returnPct <= 0) return 0;
+            let totalFee = 0;
+            let prevHurdle = 0;
+
+            for (let i = 0; i < HURDLES.length; i++) {
+                if (returnPct > prevHurdle) {
+                    const width = Math.min(returnPct, HURDLES[i]) - prevHurdle;
+                    totalFee += width * RATES[i] * aum;
+                }
+                prevHurdle = HURDLES[i];
+            }
+
+            if (returnPct > HURDLES[HURDLES.length - 1]) {
+                const excess = returnPct - HURDLES[HURDLES.length - 1];
+                totalFee += excess * RATES[RATES.length - 1] * aum;
+            }
+
+            return totalFee;
+        }
+
+        // Calculate performance fee (non-cumulative method)
+        function calcPerfFeeNonCumulative(returnPct, aum) {
+            if (returnPct <= HURDLES[0]) return 0;
+
+            let applicableRate = RATES[0];
+            for (let i = 0; i < HURDLES.length; i++) {
+                if (returnPct >= HURDLES[i]) applicableRate = RATES[i];
+            }
+
+            return (returnPct - HURDLES[0]) * applicableRate * aum;
+        }
+
+        // Calculate total revenue for given parameters
+        function calculateRevenue(aum, returnPct, advisoryPct, method) {
+            const managedPct = 1 - advisoryPct;
+            const blendedMgmt = advisoryPct * ADVISORY_MGMT + managedPct * MANAGED_MGMT;
+            const mgmtFee = aum * blendedMgmt;
+
+            let perfFee = 0;
+            if (returnPct > 0) {
+                perfFee = method === 'cumulative'
+                    ? calcPerfFeeCumulative(returnPct, aum)
+                    : calcPerfFeeNonCumulative(returnPct, aum);
+            }
+
+            return { mgmtFee, perfFee, total: mgmtFee + perfFee };
+        }
+
+        // Get advisory percentage from model mix
+        function getAdvisoryPct() {
+            const mix = document.getElementById('modelMix').value;
+            const parts = mix.split('-');
+            return parseInt(parts[0]) / 100;
+        }
+
+        // Get expected return based on risk profile
+        function getExpectedReturn() {
+            const profile = document.getElementById('riskProfile').value;
+            if (profile === 'custom') {
+                return parseFloat(document.getElementById('customReturn').value) / 100;
+            }
+            return RISK_RETURNS[profile];
+        }
+
+        // Update slider display
+        function updateSlider(type) {
+            if (type === 'clients') {
+                const val = document.getElementById('numClients').value;
+                document.getElementById('clientsValue').textContent = val;
+            } else if (type === 'avgAum') {
+                const val = document.getElementById('avgAum').value;
+                document.getElementById('avgAumValue').textContent = '$' + val + 'K';
+            } else if (type === 'growth') {
+                const val = document.getElementById('clientGrowth').value;
+                document.getElementById('growthValue').textContent = val;
+            } else if (type === 'churn') {
+                const val = document.getElementById('churnRate').value;
+                document.getElementById('churnValue').textContent = val + '%';
+            }
+            calculate();
+        }
+
+        // Show/hide custom return field
+        document.getElementById('riskProfile').addEventListener('change', function() {
+            const customGroup = document.getElementById('customReturnGroup');
+            customGroup.style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+
+        // Tab switching
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Main calculation function
+        function calculate() {
+            const numClients = parseInt(document.getElementById('numClients').value);
+            const avgAum = parseInt(document.getElementById('avgAum').value) * 1000;
+            const clientGrowth = parseInt(document.getElementById('clientGrowth').value);
+            const churnRate = parseInt(document.getElementById('churnRate').value) / 100;
+            const expectedReturn = getExpectedReturn();
+            const advisoryPct = getAdvisoryPct();
+            const method = document.getElementById('feeMethod').value;
+
+            // Current state
+            const currentAum = numClients * avgAum;
+            const year1Revenue = calculateRevenue(currentAum, expectedReturn, advisoryPct, method);
+
+            // Update key metrics
+            document.getElementById('currentAum').textContent = formatMoney(currentAum);
+            document.getElementById('currentClients').textContent = numClients + ' clients';
+            document.getElementById('year1Revenue').textContent = formatMoney(year1Revenue.total);
+            document.getElementById('year1Pct').textContent = ((year1Revenue.total / GOAL) * 100).toFixed(1) + '% of goal';
+
+            // Progress bar
+            const progressPct = Math.min((year1Revenue.total / GOAL) * 100, 100);
+            document.getElementById('progressBar').style.width = progressPct + '%';
+            document.getElementById('progressBar').textContent = progressPct.toFixed(1) + '%';
+
+            // Calculate required AUM for $1M
+            const blendedMgmt = advisoryPct * ADVISORY_MGMT + (1 - advisoryPct) * MANAGED_MGMT;
+            // Estimate: total rate = mgmt + perf rate on return
+            const estPerfRate = expectedReturn > 0 ? calcPerfFeeCumulative(expectedReturn, 1) : 0;
+            const totalRatePerDollar = blendedMgmt + estPerfRate;
+            const requiredAum = totalRatePerDollar > 0 ? GOAL / totalRatePerDollar : 0;
+            const requiredClients = Math.ceil(requiredAum / avgAum);
+
+            document.getElementById('requiredAum').textContent = formatMoney(requiredAum);
+            document.getElementById('requiredClients').textContent = '~' + requiredClients + ' clients needed';
+
+            // 5-year projection
+            let projectionData = [];
+            let clients = numClients;
+            let yearsToGoal = null;
+
+            for (let year = 1; year <= 7; year++) {
+                const aum = clients * avgAum;
+                const rev = calculateRevenue(aum, expectedReturn, advisoryPct, method);
+
+                projectionData.push({
+                    year,
+                    clients,
+                    aum,
+                    mgmtFee: rev.mgmtFee,
+                    perfFee: rev.perfFee,
+                    total: rev.total,
+                    perPartner: rev.total / 4,
+                    goalReached: rev.total >= GOAL
+                });
+
+                if (rev.total >= GOAL && yearsToGoal === null) {
+                    yearsToGoal = year;
+                }
+
+                // Grow clients for next year
+                const lostClients = Math.floor(clients * churnRate);
+                clients = clients - lostClients + clientGrowth;
+            }
+
+            // Update years to goal
+            if (yearsToGoal !== null) {
+                document.getElementById('yearsToGoal').textContent = yearsToGoal + ' years';
+            } else if (year1Revenue.total >= GOAL) {
+                document.getElementById('yearsToGoal').textContent = 'NOW! ✓';
+            } else {
+                document.getElementById('yearsToGoal').textContent = '7+ years';
+            }
+
+            // Render projection table
+            const projBody = document.getElementById('projectionBody');
+            projBody.innerHTML = '';
+            projectionData.forEach(p => {
+                const rowClass = p.goalReached ? 'goal-reached' : '';
+                projBody.innerHTML += `
+                    <tr class="${rowClass}">
+                        <td>Year ${p.year}</td>
+                        <td>${p.clients}</td>
+                        <td class="money">${formatMoney(p.aum)}</td>
+                        <td class="money">${formatMoney(p.mgmtFee)}</td>
+                        <td class="money">${formatMoney(p.perfFee)}</td>
+                        <td class="money">${formatMoney(p.total)}${p.goalReached ? ' ✓' : ''}</td>
+                        <td class="money">${formatMoney(p.perPartner)}</td>
+                    </tr>
+                `;
+            });
+
+            // Insight text
+            const insight = generateInsight(year1Revenue, yearsToGoal, requiredClients, numClients);
+            document.getElementById('insightText').textContent = insight;
+
+            // Update sensitivity analysis
+            updateSensitivity(avgAum, advisoryPct, method);
+        }
+
+        function generateInsight(year1Rev, yearsToGoal, requiredClients, currentClients) {
+            if (year1Rev.total >= GOAL) {
+                return `Congratulations! You're already at $1M revenue with your current setup. Focus on maintaining client relationships and steady growth.`;
+            } else if (yearsToGoal && yearsToGoal <= 3) {
+                return `You're on a strong trajectory! At this pace, you'll hit $1M in ${yearsToGoal} year(s). Consider focusing on client retention to accelerate growth.`;
+            } else if (yearsToGoal && yearsToGoal <= 5) {
+                return `Solid progress. To speed up: add ${Math.ceil((requiredClients - currentClients) / 2)} more clients or increase average AUM by 20%.`;
+            } else {
+                const gap = requiredClients - currentClients;
+                return `You need ${gap} more clients at current AUM levels. Consider: (1) targeting higher-net-worth clients, (2) increasing acquisition rate, or (3) moving more clients to Managed model.`;
+            }
+        }
+
+        function updateSensitivity(avgAum, advisoryPct, method) {
+            // Update the label to show current avg AUM
+            const avgAumK = avgAum / 1000;
+            document.getElementById('sensitivityAumLabel').textContent = `Based on $${avgAumK}K avg AUM per client (15 new clients/yr, 5% churn)`;
+
+            // Sensitivity grid: Clients vs Return
+            const clientLevels = [25, 50, 75, 100, 150];
+            const returnLevels = [0.08, 0.12, 0.15, 0.20, 0.25];
+
+            let gridHtml = '<div class="sensitivity-header"></div>';
+            returnLevels.forEach(r => {
+                gridHtml += `<div class="sensitivity-header">${(r * 100).toFixed(0)}% Ret</div>`;
+            });
+
+            clientLevels.forEach(clients => {
+                gridHtml += `<div class="sensitivity-cell sensitivity-row-header">${clients} clients</div>`;
+                returnLevels.forEach(ret => {
+                    const aum = clients * avgAum;
+                    const rev = calculateRevenue(aum, ret, advisoryPct, method);
+
+                    // Calculate years to goal
+                    let years = null;
+                    let c = clients;
+                    const growth = 15;
+                    const churn = 0.05;
+
+                    for (let y = 1; y <= 10; y++) {
+                        const aumY = c * avgAum;
+                        const revY = calculateRevenue(aumY, ret, advisoryPct, method);
+                        if (revY.total >= GOAL) {
+                            years = y;
+                            break;
+                        }
+                        c = c - Math.floor(c * churn) + growth;
+                    }
+
+                    let heatClass = '';
+                    if (years === 1) heatClass = 'heat-5';
+                    else if (years === 2) heatClass = 'heat-4';
+                    else if (years <= 3) heatClass = 'heat-3';
+                    else if (years <= 5) heatClass = 'heat-2';
+                    else heatClass = 'heat-1';
+
+                    gridHtml += `<div class="sensitivity-cell ${heatClass}">${years ? years + 'y' : '10+'}</div>`;
+                });
+            });
+
+            document.getElementById('sensitivityGrid').innerHTML = gridHtml;
+
+            // Revenue grid: AUM vs Return
+            const aumLevels = [10000000, 25000000, 50000000, 75000000, 100000000];
+
+            let revGridHtml = '<div class="sensitivity-header"></div>';
+            returnLevels.forEach(r => {
+                revGridHtml += `<div class="sensitivity-header">${(r * 100).toFixed(0)}% Ret</div>`;
+            });
+
+            aumLevels.forEach(aum => {
+                revGridHtml += `<div class="sensitivity-cell sensitivity-row-header">$${aum / 1000000}M</div>`;
+                returnLevels.forEach(ret => {
+                    const rev = calculateRevenue(aum, ret, advisoryPct, method);
+                    const revK = Math.round(rev.total / 1000);
+
+                    let heatClass = '';
+                    if (rev.total >= GOAL) heatClass = 'heat-5';
+                    else if (rev.total >= 750000) heatClass = 'heat-4';
+                    else if (rev.total >= 500000) heatClass = 'heat-3';
+                    else if (rev.total >= 250000) heatClass = 'heat-2';
+                    else heatClass = 'heat-1';
+
+                    revGridHtml += `<div class="sensitivity-cell ${heatClass}">${revK}K</div>`;
+                });
+            });
+
+            document.getElementById('revenueGrid').innerHTML = revGridHtml;
+        }
+
+        // Initialize
+        calculate();
+    </script>
+</body>
+</html>

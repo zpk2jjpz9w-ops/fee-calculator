@@ -449,6 +449,176 @@
             background: var(--gray-200);
             margin: 20px 0;
         }
+
+        /* ========== MOBILE RESPONSIVE STYLES ========== */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .header p {
+                font-size: 0.95rem;
+            }
+
+            .header a {
+                font-size: 0.8rem !important;
+                padding: 6px 12px !important;
+            }
+
+            .goal-banner {
+                padding: 16px 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .goal-banner h2 {
+                font-size: 1.2rem;
+            }
+
+            .goal-amount {
+                font-size: 2rem;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .card {
+                padding: 16px;
+                border-radius: 12px;
+            }
+
+            .section-title {
+                font-size: 1rem;
+            }
+
+            .key-metrics {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .metric-card {
+                padding: 14px 10px;
+            }
+
+            .metric-value {
+                font-size: 1.3rem;
+            }
+
+            .metric-label {
+                font-size: 0.7rem;
+            }
+
+            .metric-sub {
+                font-size: 0.65rem;
+            }
+
+            .tabs {
+                gap: 6px;
+            }
+
+            .tab-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+
+            /* Make projection table scrollable */
+            .projection-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                font-size: 0.75rem;
+            }
+
+            .projection-table th,
+            .projection-table td {
+                padding: 8px 10px;
+            }
+
+            /* Make sensitivity grid scrollable */
+            .sensitivity-grid {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .sensitivity-grid > div {
+                display: inline-block;
+                min-width: 60px;
+            }
+
+            .slider-group label {
+                font-size: 0.8rem;
+            }
+
+            .form-group label {
+                font-size: 0.8rem;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 12px 14px;
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 16px 20px;
+                font-size: 1rem;
+            }
+
+            .assumptions-box {
+                padding: 12px;
+            }
+
+            .assumptions-box p {
+                font-size: 0.75rem !important;
+            }
+
+            .insight-box {
+                padding: 14px 16px;
+            }
+
+            .insight-box h4 {
+                font-size: 0.85rem;
+            }
+
+            .insight-box p {
+                font-size: 0.8rem;
+            }
+
+            footer {
+                font-size: 0.75rem;
+                margin-top: 20px;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .goal-amount {
+                font-size: 1.7rem;
+            }
+
+            .key-metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-card {
+                padding: 16px;
+            }
+
+            .metric-value {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>

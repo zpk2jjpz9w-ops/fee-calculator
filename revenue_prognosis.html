@@ -453,103 +453,109 @@
         /* ========== MOBILE RESPONSIVE STYLES ========== */
         @media (max-width: 768px) {
             body {
-                padding: 12px;
+                padding: 10px;
             }
 
             .header h1 {
-                font-size: 1.6rem;
+                font-size: 1.5rem;
             }
 
             .header p {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
             }
 
             .header a {
-                font-size: 0.8rem !important;
-                padding: 6px 12px !important;
+                font-size: 0.75rem !important;
+                padding: 6px 10px !important;
             }
 
             .goal-banner {
-                padding: 16px 20px;
+                padding: 14px 16px;
                 flex-direction: column;
                 text-align: center;
             }
 
             .goal-banner h2 {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
 
             .goal-amount {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
 
             .main-grid {
                 grid-template-columns: 1fr;
-                gap: 16px;
+                gap: 12px;
             }
 
             .card {
-                padding: 16px;
+                padding: 14px;
                 border-radius: 12px;
             }
 
             .section-title {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
 
             .key-metrics {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
+                gap: 8px;
             }
 
             .metric-card {
-                padding: 14px 10px;
+                padding: 12px 8px;
             }
 
             .metric-value {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
 
             .metric-label {
-                font-size: 0.7rem;
-            }
-
-            .metric-sub {
                 font-size: 0.65rem;
             }
 
+            .metric-sub {
+                font-size: 0.6rem;
+            }
+
             .tabs {
-                gap: 6px;
+                gap: 4px;
             }
 
             .tab-btn {
-                padding: 8px 12px;
-                font-size: 0.8rem;
+                padding: 8px 10px;
+                font-size: 0.75rem;
             }
 
-            /* Make projection table scrollable */
+            /* Hide less important columns on mobile */
+            .projection-table .hide-mobile {
+                display: none;
+            }
+
             .projection-table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-                font-size: 0.75rem;
+                font-size: 0.7rem;
             }
 
             .projection-table th,
             .projection-table td {
-                padding: 8px 10px;
+                padding: 6px 4px;
             }
 
-            /* Make sensitivity grid scrollable */
+            /* Sensitivity grid - smaller to fit */
             .sensitivity-grid {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
+                grid-template-columns: repeat(6, 1fr);
+                font-size: 0.6rem;
+                gap: 1px;
             }
 
-            .sensitivity-grid > div {
-                display: inline-block;
-                min-width: 60px;
+            .sensitivity-header {
+                padding: 4px 2px;
+                font-size: 0.55rem;
+            }
+
+            .sensitivity-cell {
+                padding: 4px 2px;
+                font-size: 0.6rem;
             }
 
             .slider-group label {
@@ -562,61 +568,75 @@
 
             .form-group input,
             .form-group select {
-                padding: 12px 14px;
-                font-size: 1rem;
+                padding: 10px 12px;
+                font-size: 0.95rem;
             }
 
             .btn {
-                padding: 16px 20px;
-                font-size: 1rem;
+                padding: 14px 16px;
+                font-size: 0.95rem;
             }
 
             .assumptions-box {
-                padding: 12px;
+                padding: 10px;
             }
 
             .assumptions-box p {
-                font-size: 0.75rem !important;
+                font-size: 0.7rem !important;
             }
 
             .insight-box {
-                padding: 14px 16px;
+                padding: 12px 14px;
             }
 
             .insight-box h4 {
-                font-size: 0.85rem;
-            }
-
-            .insight-box p {
                 font-size: 0.8rem;
             }
 
-            footer {
+            .insight-box p {
                 font-size: 0.75rem;
-                margin-top: 20px;
+            }
+
+            .divider {
+                margin: 14px 0;
+            }
+
+            footer {
+                font-size: 0.7rem;
+                margin-top: 16px;
             }
         }
 
         /* Extra small screens */
-        @media (max-width: 480px) {
+        @media (max-width: 400px) {
             .header h1 {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
 
             .goal-amount {
-                font-size: 1.7rem;
+                font-size: 1.5rem;
             }
 
             .key-metrics {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
             }
 
             .metric-card {
-                padding: 16px;
+                padding: 10px 6px;
             }
 
             .metric-value {
-                font-size: 1.5rem;
+                font-size: 1.1rem;
+            }
+
+            .sensitivity-grid {
+                font-size: 0.55rem;
+            }
+
+            .sensitivity-header,
+            .sensitivity-cell {
+                padding: 3px 1px;
             }
         }
     </style>
@@ -785,10 +805,10 @@
                                 <tr>
                                     <th>Year</th>
                                     <th>Clients</th>
-                                    <th>Total AUM</th>
-                                    <th>Mgmt Fees</th>
-                                    <th>Perf Fees</th>
-                                    <th>Total Revenue</th>
+                                    <th>AUM</th>
+                                    <th class="hide-mobile">Mgmt</th>
+                                    <th class="hide-mobile">Perf</th>
+                                    <th>Revenue</th>
                                     <th>Per Partner</th>
                                 </tr>
                             </thead>
@@ -1049,11 +1069,11 @@
                 const rowClass = p.goalReached ? 'goal-reached' : '';
                 projBody.innerHTML += `
                     <tr class="${rowClass}">
-                        <td>Year ${p.year}</td>
+                        <td>Y${p.year}</td>
                         <td>${p.clients}</td>
                         <td class="money">${formatMoney(p.aum)}</td>
-                        <td class="money">${formatMoney(p.mgmtFee)}</td>
-                        <td class="money">${formatMoney(p.perfFee)}</td>
+                        <td class="money hide-mobile">${formatMoney(p.mgmtFee)}</td>
+                        <td class="money hide-mobile">${formatMoney(p.perfFee)}</td>
                         <td class="money">${formatMoney(p.total)}${p.goalReached ? ' ✓' : ''}</td>
                         <td class="money">${formatMoney(p.perPartner)}</td>
                     </tr>

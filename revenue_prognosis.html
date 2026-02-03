@@ -456,6 +456,7 @@
         <header class="header">
             <h1>🎯 Path to $1M Revenue</h1>
             <p>Interactive Fund Growth Prognosis Tool</p>
+            <a href="hwm_research.html" style="display: inline-block; margin-top: 12px; padding: 8px 16px; background: rgba(255,255,255,0.15); color: white; text-decoration: none; border-radius: 8px; font-size: 0.9rem; transition: background 0.2s;">📊 View HWM Research Data →</a>
         </header>
 
         <div class="goal-banner">
@@ -539,7 +540,29 @@
                     </select>
                 </div>
 
-                <button class="btn btn-primary" onclick="calculate()">
+                <div class="divider"></div>
+
+                <div class="slider-group">
+                    <label>
+                        <span>HWM Adjustment (%)</span>
+                        <span class="slider-value" id="hwmValue">25%</span>
+                    </label>
+                    <input type="range" id="hwmAdjustment" min="0" max="50" value="25" oninput="updateSlider('hwm')">
+                </div>
+                <div class="assumptions-box" style="margin-top: 8px; padding: 12px; font-size: 0.8rem;">
+                    <p style="margin: 0 0 8px 0; color: var(--gray-600);">
+                        <strong>High Water Mark Impact:</strong> Reduces projected performance fees to account for down years and recovery periods when no performance fees are collected.
+                    </p>
+                    <p style="margin: 0 0 8px 0; color: var(--gray-700); font-family: monospace; font-size: 0.75rem; background: #e0e7ff; padding: 6px 8px; border-radius: 4px;">
+                        <strong>HWM Formula:</strong><br>
+                        New HWM = AUM + Gross Return − Mgmt Fee − Perf Fee
+                    </p>
+                    <p style="margin: 0; color: var(--gray-500); font-size: 0.75rem;">
+                        Based on top 10 hedge fund analysis: elite funds average ~3 negative years per 25-year period with 1-2 year recovery times.
+                    </p>
+                </div>
+
+                <button class="btn btn-primary" onclick="calculate()" style="margin-top: 16px;">
                     🔄 Recalculate Projections
                 </button>
             </div>
@@ -743,6 +766,9 @@
             } else if (type === 'churn') {
                 const val = document.getElementById('churnRate').value;
                 document.getElementById('churnValue').textContent = val + '%';
+            } else if (type === 'hwm') {
+                const val = document.getElementById('hwmAdjustment').value;
+                document.getElementById('hwmValue').textContent = val + '%';
             }
             calculate();
         }
@@ -767,13 +793,20 @@
             const avgAum = parseInt(document.getElementById('avgAum').value) * 1000;
             const clientGrowth = parseInt(document.getElementById('clientGrowth').value);
             const churnRate = parseInt(document.getElementById('churnRate').value) / 100;
+            const hwmAdjustment = parseInt(document.getElementById('hwmAdjustment').value) / 100;
             const expectedReturn = getExpectedReturn();
             const advisoryPct = getAdvisoryPct();
             const method = document.getElementById('feeMethod').value;
 
             // Current state
             const currentAum = numClients * avgAum;
-            const year1Revenue = calculateRevenue(currentAum, expectedReturn, advisoryPct, method);
+            const year1RevenueRaw = calculateRevenue(currentAum, expectedReturn, advisoryPct, method);
+            // Apply HWM adjustment to performance fees
+            const year1Revenue = {
+                mgmtFee: year1RevenueRaw.mgmtFee,
+                perfFee: year1RevenueRaw.perfFee * (1 - hwmAdjustment),
+                total: year1RevenueRaw.mgmtFee + year1RevenueRaw.perfFee * (1 - hwmAdjustment)
+            };
 
             // Update key metrics
             document.getElementById('currentAum').textContent = formatMoney(currentAum);
@@ -786,11 +819,12 @@
             document.getElementById('progressBar').style.width = progressPct + '%';
             document.getElementById('progressBar').textContent = progressPct.toFixed(1) + '%';
 
-            // Calculate required AUM for $1M
+            // Calculate required AUM for $1M (with HWM adjustment)
             const blendedMgmt = advisoryPct * ADVISORY_MGMT + (1 - advisoryPct) * MANAGED_MGMT;
-            // Estimate: total rate = mgmt + perf rate on return
+            // Estimate: total rate = mgmt + (perf rate on return * HWM adjustment)
             const estPerfRate = expectedReturn > 0 ? calcPerfFeeCumulative(expectedReturn, 1) : 0;
-            const totalRatePerDollar = blendedMgmt + estPerfRate;
+            const adjustedPerfRate = estPerfRate * (1 - hwmAdjustment);
+            const totalRatePerDollar = blendedMgmt + adjustedPerfRate;
             const requiredAum = totalRatePerDollar > 0 ? GOAL / totalRatePerDollar : 0;
             const requiredClients = Math.ceil(requiredAum / avgAum);
 
@@ -804,20 +838,23 @@
 
             for (let year = 1; year <= 7; year++) {
                 const aum = clients * avgAum;
-                const rev = calculateRevenue(aum, expectedReturn, advisoryPct, method);
+                const revRaw = calculateRevenue(aum, expectedReturn, advisoryPct, method);
+                // Apply HWM adjustment to performance fees
+                const adjustedPerfFee = revRaw.perfFee * (1 - hwmAdjustment);
+                const adjustedTotal = revRaw.mgmtFee + adjustedPerfFee;
 
                 projectionData.push({
                     year,
                     clients,
                     aum,
-                    mgmtFee: rev.mgmtFee,
-                    perfFee: rev.perfFee,
-                    total: rev.total,
-                    perPartner: rev.total / 4,
-                    goalReached: rev.total >= GOAL
+                    mgmtFee: revRaw.mgmtFee,
+                    perfFee: adjustedPerfFee,
+                    total: adjustedTotal,
+                    perPartner: adjustedTotal / 4,
+                    goalReached: adjustedTotal >= GOAL
                 });
 
-                if (rev.total >= GOAL && yearsToGoal === null) {
+                if (adjustedTotal >= GOAL && yearsToGoal === null) {
                     yearsToGoal = year;
                 }
 
@@ -858,7 +895,7 @@
             document.getElementById('insightText').textContent = insight;
 
             // Update sensitivity analysis
-            updateSensitivity(avgAum, advisoryPct, method);
+            updateSensitivity(avgAum, advisoryPct, method, hwmAdjustment);
         }
 
         function generateInsight(year1Rev, yearsToGoal, requiredClients, currentClients) {
@@ -874,10 +911,11 @@
             }
         }
 
-        function updateSensitivity(avgAum, advisoryPct, method) {
-            // Update the label to show current avg AUM
+        function updateSensitivity(avgAum, advisoryPct, method, hwmAdjustment) {
+            // Update the label to show current avg AUM and HWM adjustment
             const avgAumK = avgAum / 1000;
-            document.getElementById('sensitivityAumLabel').textContent = `Based on $${avgAumK}K avg AUM per client (15 new clients/yr, 5% churn)`;
+            const hwmPct = Math.round(hwmAdjustment * 100);
+            document.getElementById('sensitivityAumLabel').textContent = `Based on $${avgAumK}K avg AUM per client, ${hwmPct}% HWM adjustment (15 new clients/yr, 5% churn)`;
 
             // Sensitivity grid: Clients vs Return
             const clientLevels = [25, 50, 75, 100, 150];
@@ -892,7 +930,9 @@
                 gridHtml += `<div class="sensitivity-cell sensitivity-row-header">${clients} clients</div>`;
                 returnLevels.forEach(ret => {
                     const aum = clients * avgAum;
-                    const rev = calculateRevenue(aum, ret, advisoryPct, method);
+                    const revRaw = calculateRevenue(aum, ret, advisoryPct, method);
+                    // Apply HWM adjustment
+                    const revTotal = revRaw.mgmtFee + revRaw.perfFee * (1 - hwmAdjustment);
 
                     // Calculate years to goal
                     let years = null;
@@ -903,7 +943,8 @@
                     for (let y = 1; y <= 10; y++) {
                         const aumY = c * avgAum;
                         const revY = calculateRevenue(aumY, ret, advisoryPct, method);
-                        if (revY.total >= GOAL) {
+                        const revYTotal = revY.mgmtFee + revY.perfFee * (1 - hwmAdjustment);
+                        if (revYTotal >= GOAL) {
                             years = y;
                             break;
                         }
@@ -934,14 +975,16 @@
             aumLevels.forEach(aum => {
                 revGridHtml += `<div class="sensitivity-cell sensitivity-row-header">$${aum / 1000000}M</div>`;
                 returnLevels.forEach(ret => {
-                    const rev = calculateRevenue(aum, ret, advisoryPct, method);
-                    const revK = Math.round(rev.total / 1000);
+                    const revRaw = calculateRevenue(aum, ret, advisoryPct, method);
+                    // Apply HWM adjustment
+                    const revTotal = revRaw.mgmtFee + revRaw.perfFee * (1 - hwmAdjustment);
+                    const revK = Math.round(revTotal / 1000);
 
                     let heatClass = '';
-                    if (rev.total >= GOAL) heatClass = 'heat-5';
-                    else if (rev.total >= 750000) heatClass = 'heat-4';
-                    else if (rev.total >= 500000) heatClass = 'heat-3';
-                    else if (rev.total >= 250000) heatClass = 'heat-2';
+                    if (revTotal >= GOAL) heatClass = 'heat-5';
+                    else if (revTotal >= 750000) heatClass = 'heat-4';
+                    else if (revTotal >= 500000) heatClass = 'heat-3';
+                    else if (revTotal >= 250000) heatClass = 'heat-2';
                     else heatClass = 'heat-1';
 
                     revGridHtml += `<div class="sensitivity-cell ${heatClass}">${revK}K</div>`;

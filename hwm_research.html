@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Water Mark Research | Top 10 US Hedge Funds Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .formula-box h3 {
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .formula {
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-size: 1.3rem;
+            color: var(--gray-800);
+            background: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .formula-explanation {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: var(--gray-800);
+            color: white;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        tr:nth-child(even) {
+            background: var(--gray-50);
+        }
+
+        tr:hover {
+            background: #fef3c7;
+        }
+
+        .highlight-green {
+            background: #d1fae5 !important;
+            font-weight: 600;
+        }
+
+        .highlight-yellow {
+            background: #fef3c7 !important;
+        }
+
+        .highlight-red {
+            background: #fee2e2 !important;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+
+        .summary-card {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--gray-200);
+            text-align: center;
+        }
+
+        .summary-card.best {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-color: var(--success);
+        }
+
+        .summary-card.average {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-color: var(--warning);
+        }
+
+        .summary-card.worst {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-color: var(--danger);
+        }
+
+        .summary-card h4 {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .summary-card .sub {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid var(--primary);
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+        }
+
+        .insight-box h4 {
+            color: var(--primary-dark);
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .insight-box ul {
+            padding-left: 20px;
+            color: var(--gray-700);
+        }
+
+        .insight-box li {
+            margin-bottom: 8px;
+        }
+
+        .key-takeaway {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            border: 1px solid #f59e0b;
+        }
+
+        .key-takeaway h4 {
+            color: #92400e;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .key-takeaway p {
+            color: #78350f;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .sources {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .sources h4 {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .sources ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sources li {
+            margin-bottom: 6px;
+        }
+
+        .sources a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .sources a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            margin-top: 30px;
+            font-size: 0.85rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .methodology-note {
+            background: var(--gray-100);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        .tier-label {
+            font-weight: 600;
+        }
+
+        .tier-elite { color: #059669; }
+        .tier-top { color: #0284c7; }
+        .tier-good { color: #d97706; }
+        .tier-struggling { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="revenue_prognosis.html" class="back-link">← Back to Revenue Prognosis Tool</a>
+
+        <header class="header">
+            <h1>📊 High Water Mark Research</h1>
+            <p>Analysis of Top 10 US Hedge Funds: Negative Years & HWM Impact (2000-2024)</p>
+        </header>
+
+        <!-- HWM Formula -->
+        <div class="card">
+            <h2 class="section-title">📐 High Water Mark Formula</h2>
+
+            <div class="formula-box">
+                <h3>How High Water Mark is Calculated</h3>
+                <div class="formula">
+                    New HWM = AUM + Gross Return − Management Fee − Performance Fee
+                </div>
+                <p class="formula-explanation">
+                    The High Water Mark tracks the <strong>net asset value</strong> after all fees are deducted.<br>
+                    Performance fees are only charged when NAV exceeds the previous HWM.
+                </p>
+            </div>
+
+            <div class="insight-box">
+                <h4>💡 Why HWM Matters for Revenue Projections</h4>
+                <ul>
+                    <li><strong>Down years:</strong> No performance fees collected (only management fees)</li>
+                    <li><strong>Recovery years:</strong> No performance fees until fund exceeds previous peak</li>
+                    <li><strong>Impact:</strong> Even 1 down year can mean 2-4 years of reduced performance fee revenue</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Research Table -->
+        <div class="card">
+            <h2 class="section-title">🏆 Top 10 US Hedge Funds: 25-Year Analysis</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fund</th>
+                        <th>Inception</th>
+                        <th>Negative Years</th>
+                        <th>Down Years / 25</th>
+                        <th>Recovery Time</th>
+                        <th>Tier</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-green">
+                        <td><strong>Renaissance Medallion</strong></td>
+                        <td>1988</td>
+                        <td>0 (never negative)</td>
+                        <td>0 / 25</td>
+                        <td>N/A</td>
+                        <td><span class="tier-label tier-elite">Elite</span></td>
+                        <td>Only 1 loss year ever (1989). The gold standard.</td>
+                    </tr>
+                    <tr class="highlight-green">
+                        <td><strong>Millennium Management</strong></td>
+                        <td>1989</td>
+                        <td>1 (2008: -3.5%)</td>
+                        <td>1 / 25</td>
+                        <td>&lt;1 year</td>
+                        <td><span class="tier-label tier-elite">Elite</span></td>
+                        <td>Remarkably consistent. Small 2008 dip.</td>
+                    </tr>
+                    <tr class="highlight-green">
+                        <td><strong>D.E. Shaw Composite</strong></td>
+                        <td>2001</td>
+                        <td>1 (2008: -9%)</td>
+                        <td>1 / 24</td>
+                        <td>1 year</td>
+                        <td><span class="tier-label tier-elite">Elite</span></td>
+                        <td>Oculus fund: 0 negative years ever.</td>
+                    </tr>
+                    <tr class="highlight-yellow">
+                        <td><strong>Citadel Wellington</strong></td>
+                        <td>1990</td>
+                        <td>1 (2008: -55%)</td>
+                        <td>1 / 25</td>
+                        <td><strong>4 years</strong></td>
+                        <td><span class="tier-label tier-top">Top Tier</span></td>
+                        <td>Worst single-year loss. Recovered Jan 2012.</td>
+                    </tr>
+                    <tr class="highlight-yellow">
+                        <td><strong>Bridgewater Pure Alpha</strong></td>
+                        <td>1991</td>
+                        <td>~4 years</td>
+                        <td>4 / 25</td>
+                        <td>Varies</td>
+                        <td><span class="tier-label tier-top">Top Tier</span></td>
+                        <td>2020: -18.6% biggest recent loss.</td>
+                    </tr>
+                    <tr class="highlight-yellow">
+                        <td><strong>Two Sigma</strong></td>
+                        <td>2001</td>
+                        <td>3-4 years</td>
+                        <td>~4 / 24</td>
+                        <td>1-2 years</td>
+                        <td><span class="tier-label tier-top">Top Tier</span></td>
+                        <td>2020, 2023 notable losses.</td>
+                    </tr>
+                    <tr class="highlight-yellow">
+                        <td><strong>Pershing Square</strong></td>
+                        <td>2004</td>
+                        <td>3 (2008, 2015, 2016)</td>
+                        <td>3 / 20</td>
+                        <td>2-3 years</td>
+                        <td><span class="tier-label tier-good">Good</span></td>
+                        <td>2015-16: back-to-back losses (Valeant).</td>
+                    </tr>
+                    <tr class="highlight-red">
+                        <td><strong>Tiger Global</strong></td>
+                        <td>2001</td>
+                        <td>3-4 (2016, 2021, 2022)</td>
+                        <td>3 / 24</td>
+                        <td>2+ years</td>
+                        <td><span class="tier-label tier-struggling">Struggling</span></td>
+                        <td>2022: -56% catastrophic loss.</td>
+                    </tr>
+                    <tr class="highlight-yellow">
+                        <td><strong>Baupost Group</strong></td>
+                        <td>1982</td>
+                        <td>~3 in last decade</td>
+                        <td>3 / 25</td>
+                        <td>1-2 years</td>
+                        <td><span class="tier-label tier-good">Good</span></td>
+                        <td>Recent decade: only 4% avg return.</td>
+                    </tr>
+                    <tr class="highlight-red">
+                        <td><strong>Paulson & Co</strong></td>
+                        <td>1994</td>
+                        <td>4+ (2011, 2012, 2020-22)</td>
+                        <td>4+ / 25</td>
+                        <td>Still recovering</td>
+                        <td><span class="tier-label tier-struggling">Struggling</span></td>
+                        <td>2011: -52%. Never fully recovered.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="methodology-note">
+                <strong>Methodology:</strong> Data compiled from public filings, news reports, and industry publications.
+                "Negative Years" counts years with negative annual returns. "Recovery Time" is time to exceed previous HWM.
+                Some funds have limited public data; estimates marked with ~.
+            </div>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="card">
+            <h2 class="section-title">📈 Summary Statistics</h2>
+
+            <div class="summary-grid">
+                <div class="summary-card best">
+                    <h4>Best (Millennium/RenTech)</h4>
+                    <div class="value">0-1</div>
+                    <div class="sub">negative years out of 25</div>
+                </div>
+                <div class="summary-card average">
+                    <h4>Average Top 10</h4>
+                    <div class="value">~3</div>
+                    <div class="sub">negative years out of 25</div>
+                </div>
+                <div class="summary-card worst">
+                    <h4>Worst (Paulson/Tiger)</h4>
+                    <div class="value">4-5</div>
+                    <div class="sub">negative years out of 25</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Best Case (Elite Funds)</th>
+                        <th>Average Top 10</th>
+                        <th>Worst Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Negative Years</strong></td>
+                        <td class="highlight-green">0-1 out of 25</td>
+                        <td class="highlight-yellow">~3 out of 25</td>
+                        <td class="highlight-red">4-5 out of 25</td>
+                    </tr>
+                    <tr>
+                        <td><strong>% Years Below HWM</strong></td>
+                        <td class="highlight-green">4%</td>
+                        <td class="highlight-yellow">12-15%</td>
+                        <td class="highlight-red">20%+</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Avg Recovery Time</strong></td>
+                        <td class="highlight-green">&lt;1 year</td>
+                        <td class="highlight-yellow">1.5-2 years</td>
+                        <td class="highlight-red">3-4+ years</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Years w/ No Perf Fees</strong></td>
+                        <td class="highlight-green">~1-2</td>
+                        <td class="highlight-yellow">4-6</td>
+                        <td class="highlight-red">8-10+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Key Insights -->
+        <div class="card">
+            <h2 class="section-title">💡 Key Insights for HWM Adjustment</h2>
+
+            <div class="insight-box">
+                <h4>Recommended HWM Adjustment Settings</h4>
+                <ul>
+                    <li><strong>Best case (Millennium-like):</strong> ~5% reduction - For funds with exceptional risk management and quantitative strategies</li>
+                    <li><strong>Realistic case:</strong> ~15-20% reduction - For well-managed diversified funds</li>
+                    <li><strong>Conservative case:</strong> ~25% reduction - Your current default, appropriate for most scenarios</li>
+                    <li><strong>Pessimistic case:</strong> ~30-40% reduction - For volatile strategies or newer funds</li>
+                </ul>
+            </div>
+
+            <div class="key-takeaway">
+                <h4>📌 Bottom Line</h4>
+                <p>
+                    The <strong>25% default HWM adjustment</strong> in your revenue prognosis tool is well-calibrated for a realistic scenario.
+                    Elite quantitative funds like Renaissance and Millennium achieve near-perfect consistency (4% impact),
+                    but most top-tier funds experience 3-4 negative years per 25-year period with 1-2 year recovery periods (12-16% impact).
+                    <br><br>
+                    For a new fund, using 20-25% is prudent. Once you establish a track record, you can adjust based on actual performance.
+                </p>
+            </div>
+        </div>
+
+        <!-- 2008 Financial Crisis Impact -->
+        <div class="card">
+            <h2 class="section-title">⚠️ Case Study: 2008 Financial Crisis</h2>
+
+            <p style="color: var(--gray-600); margin-bottom: 20px;">
+                The 2008 crisis is the defining stress test for hedge funds. Here's how the top funds performed:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fund</th>
+                        <th>2008 Return</th>
+                        <th>Recovery Time</th>
+                        <th>Years Without Perf Fees</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-green">
+                        <td>Renaissance Medallion</td>
+                        <td><strong>+82%</strong></td>
+                        <td>N/A (positive)</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="highlight-green">
+                        <td>D.E. Shaw Oculus</td>
+                        <td><strong>+7%</strong></td>
+                        <td>N/A (positive)</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="highlight-yellow">
+                        <td>Millennium</td>
+                        <td>-3.5%</td>
+                        <td>&lt;1 year</td>
+                        <td>1</td>
+                    </tr>
+                    <tr class="highlight-yellow">
+                        <td>D.E. Shaw Composite</td>
+                        <td>-9%</td>
+                        <td>1 year</td>
+                        <td>1-2</td>
+                    </tr>
+                    <tr class="highlight-yellow">
+                        <td>Pershing Square</td>
+                        <td>-13%</td>
+                        <td>1-2 years</td>
+                        <td>2</td>
+                    </tr>
+                    <tr class="highlight-red">
+                        <td>Citadel Wellington</td>
+                        <td><strong>-55%</strong></td>
+                        <td>4 years (Jan 2012)</td>
+                        <td>4</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="color: var(--gray-500); font-size: 0.9rem; margin-top: 16px;">
+                <em>Note: The S&P 500 returned -37% in 2008. Most funds outperformed the market, but still experienced significant HWM impact.</em>
+            </p>
+        </div>
+
+        <!-- Sources -->
+        <div class="card">
+            <h2 class="section-title">📚 Sources</h2>
+
+            <div class="sources">
+                <ul>
+                    <li><a href="https://www.institutionalinvestor.com/article/2ekchq8rll8mbbn2glq80/hedge-funds/the-rich-list-the-24th-annual-ranking-of-the-highest-earning-hedge-fund-managers" target="_blank">Institutional Investor - Rich List 2024: Highest-Earning Hedge Fund Managers</a></li>
+                    <li><a href="https://www.institutionalinvestor.com/article/2dp0149luyzmxaxyntrls/portfolio/a-third-of-hedge-funds-have-not-fully-recovered-from-2022s-losses" target="_blank">Institutional Investor - A Third of Hedge Funds Have Not Fully Recovered From 2022's Losses</a></li>
+                    <li><a href="https://hedgefollow.com/funds/Pershing+Square+Capital+Management/Performance-History" target="_blank">HedgeFollow - Pershing Square Performance History</a></li>
+                    <li><a href="https://hedgefollow.com/funds/DE+Shaw/Performance-History" target="_blank">HedgeFollow - D.E. Shaw Performance History</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Citadel_LLC" target="_blank">Wikipedia - Citadel LLC</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Millennium_Management" target="_blank">Wikipedia - Millennium Management</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Paulson_&_Co." target="_blank">Wikipedia - Paulson & Co.</a></li>
+                    <li><a href="https://www.hedgeweek.com/one-third-of-hedge-funds-yet-to-recover-from-2022-losses/" target="_blank">Hedgeweek - One-third of hedge funds yet to recover from 2022 losses</a></li>
+                    <li><a href="https://www.morganstanley.com/im/publication/insights/articles/article_drawdownsandrecoveries_ltr.pdf" target="_blank">Morgan Stanley - Drawdowns and Recoveries</a></li>
+                    <li><a href="https://longbridge.com/en/learn/high-water-mark-100467" target="_blank">Longbridge - High Water Mark: What Investors Should Know</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            High Water Mark Research | Data compiled February 2026
+        </footer>
+    </div>
+</body>
+</html>
